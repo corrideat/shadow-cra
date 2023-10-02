@@ -1,23 +1,8 @@
-import browserSandbox from '@exact-realty/lot/browser';
-import { createMachine } from 'xstate';
+import browserSandbox from '@exact-realty/lot/browser-worker';
+import sandboxedCode from './sandboxed.bundle.js?raw';
 import './App.css';
 
-const externalMethods = { createMachine };
-const sandbox = await browserSandbox(
-  `
-  /* sandboxed code*/;
-  module.exports={
-    getMachine:async (config)=>{
-      const machine = await createMachine(config);
-      return machine.id;
-    },
-  };
-`,
-  undefined,
-  externalMethods,
-  undefined,
-  { browserRequireWorker: true }
-);
+const sandbox = await browserSandbox(sandboxedCode);
 
 const miniMachineConfig = {
   id: 'mini',
